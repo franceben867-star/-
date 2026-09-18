@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "telegram-gemini-education-bot",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-17",
+  "vars": {
+    "GEMINI_MODEL": "gemini-2.5-flash"
+  },
+  "secrets": {
+    "required": [
+      "TELEGRAM_BOT_TOKEN",
+      "GEMINI_API_KEY"
+    ]
+  }
+}

@@ -48,7 +48,7 @@ export async function gemini(env, messages, media) {
 }
 
 export async function route(env, messages, media=null) {
-  const order = media ? ["gemini","openrouter"] : ["openrouter","gemini","groq"];
+  const isPdf = media?.mime === "application/pdf";\n  const order = isPdf ? ["gemini"] : media ? ["gemini","openrouter"] : ["openrouter","gemini","groq"];
   const errors=[];
   for (const name of order) {
     if (!env[name==="openrouter"?"OPENROUTER_API_KEY":name==="gemini"?"GEMINI_API_KEY":"GROQ_API_KEY"]) continue;

@@ -15,14 +15,14 @@ export default {
       const input = m.text || m.caption || "";
 
       if (input === "/start") {
-        await sendMessage(env,chatId,"🤖 AI Multi Router\n\nأرسل سؤالًا، صورة، أو PDF.\n\nالأوامر:\n/models — النماذج\n/clear — مسح الذاكرة\n/translate النص — ترجمة\n/summarize النص — تلخيص\n/help — المساعدة");
+        await sendMessage(env,chatId,"🤖 AI Multi Router\n\nأرسل سؤالًا، صورة، أو PDF.\n\nالأوامر:\n/models — النماذج\n/clear — مسح الذاكرة\n/translate النص — ترجمة\n/summarize النص — تلخيص\n/help — المساعدة\n/status — حالة الخدمات");
         return new Response("OK");
       }
       if (input === "/help") {
         await sendMessage(env,chatId,"📚 أستطيع: المحادثة، تحليل الصور، قراءة PDF، الترجمة، التلخيص، والاحتفاظ بسياق المحادثة.\n\nيمكنك إرسال صورة أو PDF مع سؤال في caption.");
         return new Response("OK");
       }
-      if (input === "/models") {
+      if (input === "/status") {\n        const keys = [\n          ["OpenRouter","OPENROUTER_API_KEY"],\n          ["Gemini","GEMINI_API_KEY"],\n          ["Groq","GROQ_API_KEY"]\n        ];\n        const lines = keys.map(([name,key]) => `• ${name}: ${env[key] ? "🟢 متصل" : "🔴 غير مضاف"}`);\n        await sendMessage(env,chatId,`📊 حالة النظام\\n\\n${lines.join("\\n")}\\n\\n🧠 الذاكرة: ${env.MEMORY ? "🟢 متصلة" : "🔴 غير متصلة"}`);\n        return new Response("OK");\n      }\n      if (input === "/models") {
         await sendMessage(env,chatId,"🔀 Router\n• OpenRouter: openrouter/free\n• Gemini: gemini-2.5-flash\n• Groq: openai/gpt-oss-120b\n\nيتم الانتقال تلقائيًا للمزود التالي عند فشل المزود الحالي أو وصوله لحده.");
         return new Response("OK");
       }
@@ -65,7 +65,7 @@ export default {
       if(e.message==="FILE_TOO_LARGE_20MB") msg="❌ الملف أكبر من 20MB.";
       if(e.message==="ONLY_PDF_DOCUMENTS_SUPPORTED") msg="❌ أرسل ملف PDF أو صورة.";
       if(e.message?.startsWith("ALL_PROVIDERS_FAILED")) msg="❌ كل مزودي الذكاء الاصطناعي غير متاحين حاليًا. جرّب لاحقًا.";
-      return new Response(msg,{status:200});
+      try { if (chatId) await sendMessage(env,chatId,msg); } catch (sendError) { console.error(sendError); }\n      return new Response("OK",{status:200});
     }
   }
 };
